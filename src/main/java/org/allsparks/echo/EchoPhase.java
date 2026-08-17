@@ -1,0 +1,12 @@
+package org.allsparks.echo;
+
+public enum EchoPhase {
+    RESEARCH,
+    DETERMINISTIC_CORE,
+    DESKTOP_TRAINING,
+    INTEGRATION_REPLAY,
+    HARDWARE_INVESTIGATION,
+    PRACTICE,
+    EXPERIMENT,
+    COMPETITION_APPROVAL
+}
