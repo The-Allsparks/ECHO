@@ -7,6 +7,7 @@ import org.allsparks.echo.cue.SilenceReason;
 import org.allsparks.echo.input.EchoSnapshot;
 import org.allsparks.echo.observe.EchoDecisionRecord;
 import org.allsparks.echo.observe.RejectedCue;
+import org.allsparks.echo.observe.TraceExporter;
 import org.allsparks.echo.render.CueRenderer;
 import org.allsparks.echo.render.NoOpRenderer;
 import org.allsparks.echo.render.RendererException;
@@ -22,13 +23,20 @@ public final class EchoEngine {
     private final EchoConfig config;
     private final EchoFeatureFlags flags;
     private final CueRenderer renderer;
+    private final TraceExporter traceExporter;
     private final CueSelector selector = new CueSelector();
 
     public EchoEngine(EchoClock clock, EchoConfig config, EchoFeatureFlags flags, CueRenderer renderer) {
+        this(clock, config, flags, renderer, TraceExporter.noop());
+    }
+
+    public EchoEngine(EchoClock clock, EchoConfig config, EchoFeatureFlags flags, CueRenderer renderer,
+                      TraceExporter traceExporter) {
         this.clock = clock;
         this.config = config;
         this.flags = flags;
         this.renderer = renderer == null ? new NoOpRenderer() : renderer;
+        this.traceExporter = traceExporter == null ? TraceExporter.noop() : traceExporter;
     }
 
     public static EchoEngine phase0(EchoClock clock) {
@@ -85,6 +93,13 @@ public final class EchoEngine {
                 silence,
                 renderFail ? SonifiedCue.silence(SilenceReason.RENDERER_FAILURE) : cue,
                 selected.explanation());
+        if (flags.traceExport()) {
+            try {
+                traceExporter.write(record);
+            } catch (RuntimeException ignored) {
+                // export must not affect presentation
+            }
+        }
         return new EchoDecision(record);
     }
 

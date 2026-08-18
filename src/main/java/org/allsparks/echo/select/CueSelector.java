@@ -192,6 +192,10 @@ public final class CueSelector {
             rejected.add(new RejectedCue(CueFamily.GUIDANCE, RejectionReason.HELM_SOURCE_DISABLED));
             return GuidanceEval.silence(SilenceReason.MISSING_CAPABILITY, "HELM target source disabled");
         }
+        if (snap.targetSource() == TargetSource.BOUNDED_ADAPTER && !flags.vidarAdapter()) {
+            rejected.add(new RejectedCue(CueFamily.GUIDANCE, RejectionReason.VIDAR_ADAPTER_DISABLED));
+            return GuidanceEval.silence(SilenceReason.MISSING_CAPABILITY, "ViDAR adapter disabled");
+        }
         if (snap.targetSource() == TargetSource.NONE || snap.targetId() == null || snap.targetId().isEmpty()) {
             rejected.add(new RejectedCue(CueFamily.GUIDANCE, RejectionReason.NO_EXPLICIT_TARGET));
             return GuidanceEval.silence(SilenceReason.NO_TARGET, "no explicit selected target");
