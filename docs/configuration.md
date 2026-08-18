@@ -2,7 +2,19 @@
 
 Schema version: `echo-config.v1`
 
-File: `config/echo-default.json` (human-readable example). Validation is performed in `EchoConfig.validate()`.
+Human-readable copy: `config/echo-default.json`. The same JSON is shipped on the classpath as `org/allsparks/echo/echo-default.json` and is what JAR consumers load. Validation is performed in `EchoConfig.validate()`.
+
+## Loading
+
+```java
+EchoConfig config = EchoConfig.loadDefault();          // classpath copy (works from a JAR)
+EchoConfig fromFile = EchoConfig.fromPath(path);       // student-edited JSON on disk
+EchoConfig parsed = EchoConfig.parseJson(jsonString);  // already-read text
+```
+
+`EchoConfig.defaults()` is the in-code equivalent of the shipped JSON. Tests require `loadDefault()`, `fromPath(config/echo-default.json)`, and `defaults()` to match field-for-field.
+
+Missing files, unreadable resources, unsupported `schemaVersion`, and out-of-range fields return a config with `valid() == false`. They do not throw.
 
 ## Fields (SI units in comments)
 
@@ -31,7 +43,7 @@ Invalid config → engine refuses to emit non-silence (`INVALID_CONFIG`). No sil
 
 ## Migration
 
-`echo-config.v1` is the first version. Future versions must keep a reader that understands v1. Unknown keys are rejected.
+`echo-config.v1` is the first version. Future versions must keep a reader that understands v1. The v1 regex parser ignores unknown keys; it does not reject them. Unsupported `schemaVersion` values still make `valid()` false.
 
 ## Safe defaults
 
