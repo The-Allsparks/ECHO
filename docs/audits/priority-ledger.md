@@ -5,7 +5,7 @@
 
 | Issue | Priority | Readiness | Dependencies | Status | Subagent | Branch | PR | CI | Merge | Blocker | Next action |
 | ----- | -------- | --------- | ------------ | ------ | -------- | ------ | -- | -- | ----- | ------- | ----------- |
-| Merge PR #1 (Phase -1/0/1) | P0 | Ready | CI green | **in-progress** | — | `0.1-feasibility-and-core` | [#1](https://github.com/The-Allsparks/ECHO/pull/1) | SUCCESS | Pending auth | Human merge approval | Mark PR ready; request review |
+| Merge PR #1 (Phase -1/0/1) | P0 | Ready | CI green | **ready-to-merge** | — | `0.1-feasibility-and-core` | [#1](https://github.com/The-Allsparks/ECHO/pull/1) | SUCCESS (ubuntu, windows, docs-structure) | **Pending human approval** | `AUTOMATIC_MERGE=false` | Approve and merge |
 | Add required CI checks to branch protection | P0 | Ready | PR #1 merge optional | backlog | — | — | — | — | — | — | Create issue; implement via GitHub API |
 | Phase 2 ViDAR + TRACE replay | P1 | Blocked | PR #1 merge | backlog | [reviewed](db198001-0f3e-402b-9e6c-5b3d6655d458) | — | — | — | — | PR #1 | Single-issue vertical slice approved |
 | Draft FTC Q&A maintenance | P1 | Ready | None | backlog | — | — | — | — | — | Lead Coach for submit | Docs-only |
