@@ -1,5 +1,10 @@
 package org.allsparks.echo.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +13,7 @@ import java.util.regex.Pattern;
 
 public final class EchoConfig {
     public static final String SCHEMA_V1 = "echo-config.v1";
+    public static final String DEFAULT_RESOURCE = "/org/allsparks/echo/echo-default.json";
 
     private final String schemaVersion;
     private final double minConfidence;
@@ -71,7 +77,43 @@ public final class EchoConfig {
                 Collections.emptyList());
     }
 
+    public static EchoConfig loadDefault() {
+        return fromResource(DEFAULT_RESOURCE);
+    }
+
+    public static EchoConfig fromPath(Path path) {
+        if (path == null || !Files.isRegularFile(path)) {
+            return invalid("config file missing: " + path);
+        }
+        try {
+            String json = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+            return parseJson(json);
+        } catch (IOException e) {
+            return invalid("config file unreadable: " + path);
+        }
+    }
+
+    public static EchoConfig fromResource(String resourcePath) {
+        if (resourcePath == null || resourcePath.isEmpty()) {
+            return invalid("config resource missing");
+        }
+        String name = resourcePath.startsWith("/") ? resourcePath.substring(1) : resourcePath;
+        InputStream in = EchoConfig.class.getClassLoader().getResourceAsStream(name);
+        if (in == null) {
+            return invalid("config resource missing: " + resourcePath);
+        }
+        try (InputStream stream = in) {
+            byte[] bytes = stream.readAllBytes();
+            return parseJson(new String(bytes, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            return invalid("config resource unreadable: " + resourcePath);
+        }
+    }
+
     public static EchoConfig parseJson(String json) {
+        if (json == null) {
+            return invalid("config JSON missing");
+        }
         String version = stringField(json, "schemaVersion");
         List<String> errors = new ArrayList<>();
         if (!SCHEMA_V1.equals(version)) {
@@ -105,6 +147,10 @@ public final class EchoConfig {
                 c.alignmentPulse, c.pitchEnabled, c.pitchHz, c.pitchMinHz, c.pitchMaxHz,
                 c.defaultGain, c.maxGain, c.hysteresisPan, c.commitmentWindowMs,
                 c.confirmCooldownMs, c.warnCooldownMs, c.warnRateLimitPerSec, errors);
+    }
+
+    private static EchoConfig invalid(String message) {
+        return defaults().withErrors(Collections.singletonList(message));
     }
 
     public EchoConfig withErrors(List<String> extra) {
