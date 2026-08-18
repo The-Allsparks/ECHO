@@ -1,0 +1,49 @@
+## Problem
+ECHO needs a source-backed Phase -1 record before any match-audio architecture is claimed.
+
+## Student learning objective
+Students can distinguish verified FTC facts, engineering inference, and unknowns requiring Q and A or hardware.
+
+## Scope
+Maintain research docs, references, feasibility decision, and Kickoff re-verification checklist.
+
+## Out of scope
+Submitting FTC Q and A without Lead Coach authorization. Claiming competition legality.
+
+## Acceptance criteria
+- [ ] Research docs cite primary sources with access dates
+- [ ] Feasibility decision remains honest after Kickoff manual
+- [ ] Draft Q and A questions exist but are not submitted
+
+## Dependencies
+None
+
+## Readiness requirements
+Access to current FTC resources and REV docs.
+
+## Architecture impact
+Gates all physical output phases.
+
+## Implementation plan
+Re-read manual after 12 Sep 2026; update docs; search Q and A after 28 Sep 2026.
+
+## Validation plan
+Maintainer review against primary sources only.
+
+## Documentation required
+docs/research/*, docs/feasibility-decision.md, docs/references.md
+
+## Hardware validation required
+- [ ] None for this slice
+
+## Rules implications
+High — defines what may be planned vs approved.
+
+## Human-safety implications
+Hearing and communication risks documented.
+
+## Rollback or disable strategy
+If rules forbid all paths, escalate to TRAINING ONLY or NO-GO in feasibility doc.
+
+## Parent epic or roadmap link
+Roadmap epic: ECHO Phase -1 Feasibility and Research

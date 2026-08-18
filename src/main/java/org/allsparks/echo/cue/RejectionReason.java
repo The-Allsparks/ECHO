@@ -1,0 +1,14 @@
+package org.allsparks.echo.cue;
+
+public enum RejectionReason {
+    LOWER_PRIORITY,
+    NOT_ELIGIBLE,
+    COOLDOWN,
+    RATE_LIMITED,
+    SUPERSEDED_BY_WARNING,
+    HYSTERESIS_HOLD,
+    FLAG_DISABLED,
+    UNKNOWN_OR_STALE,
+    NO_EXPLICIT_TARGET,
+    HELM_SOURCE_DISABLED
+}

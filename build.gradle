@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id 'application'
+}
+
+group = 'org.allsparks'
+version = '0.1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    withSourcesJar()
+    withJavadocJar()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+application {
+    mainClass = 'org.allsparks.echo.training.DesktopTrainingApp'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+tasks.named('jar', Jar) {
+    manifest {
+        attributes(
+                'Implementation-Title': 'ECHO',
+                'Implementation-Version': archiveVersion,
+                'Automatic-Module-Name': 'org.allsparks.echo'
+        )
+    }
+}
+
+tasks.register('runDesktopTraining', JavaExec) {
+    group = 'application'
+    description = 'Launch the off-field desktop training UI. Does not enable competition audio.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.allsparks.echo.training.DesktopTrainingApp'
+    args = ['--no-audio']
+}

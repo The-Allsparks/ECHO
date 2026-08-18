@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "echo-config.v1",
+  "minConfidence": 0.60,
+  "maxObservationAgeMs": 250,
+  "panSaturationBearingRad": 1.5707963267948966,
+  "pulseNearM": 0.25,
+  "pulseFarM": 2.50,
+  "pulseNearMs": 90,
+  "pulseFarMs": 700,
+  "alignmentPulse": false,
+  "pitchEnabled": false,
+  "pitchHz": 440.0,
+  "pitchMinHz": 350.0,
+  "pitchMaxHz": 520.0,
+  "defaultGain": 0.08,
+  "maxGain": 0.20,
+  "hysteresisPan": 0.08,
+  "commitmentWindowMs": 150,
+  "confirmCooldownMs": 400,
+  "warnCooldownMs": 1500,
+  "warnRateLimitPerSec": 0.5
+}

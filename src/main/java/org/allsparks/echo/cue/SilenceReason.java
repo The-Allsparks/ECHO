@@ -1,0 +1,18 @@
+package org.allsparks.echo.cue;
+
+public enum SilenceReason {
+    NONE,
+    DISABLED,
+    NO_TARGET,
+    STALE,
+    LOW_CONFIDENCE,
+    UNKNOWN_INPUT,
+    MISSING_CAPABILITY,
+    MISSING_AUDIO,
+    AUDIO_DEVICE_LOST,
+    CONTRADICTORY,
+    INVALID_CONFIG,
+    RATE_LIMITED,
+    NO_USEFUL_ACTION,
+    RENDERER_FAILURE
+}
