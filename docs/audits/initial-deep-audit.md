@@ -14,11 +14,11 @@ ECHO is a well-scoped **presentation-only** auditory guidance framework for FTC 
 
 **Highest-priority blockers before further feature work:**
 
-1. **Merge PR #1** — all Phase -1/0/1 work is stranded on a draft branch; `main` contains only governance files.
-2. **Branch protection lacks required CI checks** — protection exists but does not require the `CI` workflow to pass before merge.
-3. **`vidarAdapter` flag not enforced** — documented rollback strategy contradicts current behavior (guidance works with flag off).
+1. **Merge PR #1** — ~~stranded on a draft branch~~ **resolved** 2026-08-17: merged as `b09385d`.
+2. **Branch protection lacks required CI checks** — ~~no required checks~~ **resolved** 2026-08-17: `main` requires `test (ubuntu-latest)`, `test (windows-latest)`, and `docs-structure` (strict, GitHub Actions app 15368). See #3.
+3. **`vidarAdapter` flag not enforced** — documented rollback strategy contradicts current behavior (guidance works with flag off). Remaining P1: #4.
 
-**Safe to proceed after merge:** Phase 2 ViDAR adapter + TRACE replay contract (desktop-only, no hardware).
+**Safe to proceed:** Phase 2 ViDAR adapter + TRACE replay contract (desktop-only, no hardware).
 
 ---
 
@@ -175,7 +175,7 @@ ECHO converts **already-selected**, timestamped robot-state snapshots into at mo
 
 | ID | Severity | Type | Finding |
 | -- | -------- | ---- | ------- |
-| R1 | **HIGH** | SECURITY | Branch protection on `main` lacks **required status checks** for CI workflow |
+| R1 | **HIGH** | SECURITY | ~~Branch protection on `main` lacks required status checks~~ **Resolved 2026-08-17:** required checks `test (ubuntu-latest)`, `test (windows-latest)`, `docs-structure` |
 | R2 | HIGH | ARCHITECTURE | Feature work on draft PR #1; `main` stale (governance only) |
 | R3 | MEDIUM | DOCUMENTATION | Milestones and labels exist; **zero GitHub issues** created (roadmap script not run) |
 | R4 | INFORMATIONAL | DOCUMENTATION | Issue template at `.github/ISSUE_TEMPLATE/phase_work.md` |
