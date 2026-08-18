@@ -40,6 +40,16 @@ Optional desktop training UI (no competition audio; speakers remain off unless y
 - Update maturity language in `README.md` when a claim changes.
 - Run `.\gradlew.bat test` (or `./gradlew test`) before requesting review.
 
+### Required checks on `main`
+
+Pull requests into `main` must pass these GitHub Actions jobs before merge:
+
+- `test (ubuntu-latest)`
+- `test (windows-latest)`
+- `docs-structure`
+
+The branch must also be up to date with `main`. Do not bypass required checks.
+
 ## Line endings
 
 The repository stores LF line endings (see [.gitattributes](.gitattributes)).
