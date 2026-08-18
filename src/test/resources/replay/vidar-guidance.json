@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "echo-replay.v0",
+  "clockStartNanos": 0,
+  "vidarAdapter": true,
+  "traceExport": false,
+  "steps": [
+    {
+      "receiptNanos": 0,
+      "observationNanos": 0,
+      "driverEnabled": true,
+      "audioDeviceStatus": "AVAILABLE",
+      "targetSource": "BOUNDED_ADAPTER",
+      "sourceId": "vidar",
+      "targetId": "tag-3",
+      "category": "sample",
+      "bearingRad": 0.5,
+      "distanceM": 1.1,
+      "confidence": 0.9
+    }
+  ]
+}

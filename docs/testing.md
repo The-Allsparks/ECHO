@@ -2,7 +2,7 @@
 
 Do not rely only on listening.
 
-## Automated (Phase 0–1)
+## Automated (Phase 0–2)
 
 See `src/test/java/org/allsparks/echo`. Coverage includes:
 
@@ -18,6 +18,11 @@ See `src/test/java/org/allsparks/echo`. Coverage includes:
 - Config validation
 - Deterministic replay (two runs, same record)
 - TRACE-shaped record fields present
+- `vidarAdapter` gate for `TargetSource.BOUNDED_ADAPTER` (`VIDAR_ADAPTER_DISABLED` → `MISSING_CAPABILITY`)
+- ViDAR adapter negatives: stale, low confidence, unknown bearing, empty `targetId`
+- File replay: `echo-replay.v0` fixtures under `src/test/resources/replay/` via `ReplayRunner`
+- Golden replay run twice → identical `EchoDecisionRecord.toExplanation()` per step
+- `TraceExporter` no-op unless `traceExport=true`
 
 Property-style: bearing normalization is tested across a grid of offsets (not a full PBT library, to keep JDK-only).
 
@@ -26,6 +31,7 @@ Property-style: bearing normalization is tested across a grid of offsets (not a 
 - Driver Hub USB behavior
 - Match legality
 - That cues improve cycle time
+- Live ViDAR on a Control Hub
 
 ## Running
 
