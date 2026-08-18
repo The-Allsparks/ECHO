@@ -41,11 +41,26 @@ class ReplayGoldenTest {
     }
 
     @Test
+    void amperWarningFixturePreemptsGuidance() {
+        ReplayRunner.ReplayResult result = ReplayRunner.run(resource("/replay/amper-preempt.json"));
+        assertEquals(ReplayRunner.SCHEMA, result.schemaVersion());
+        assertTrue(result.flags().amperAdapter());
+        assertEquals(1, result.records().size());
+        assertTrue(result.snapshots().get(0).amperWarning().isTrue());
+        assertEquals(TargetSource.DRIVER, result.snapshots().get(0).targetSource());
+        EchoDecisionRecord record = result.records().get(0);
+        assertEquals(CueFamily.WARN_AMPER, record.selected());
+        assertEquals(SilenceReason.NONE, record.silenceReason());
+    }
+
+    @Test
     void replayRunTwiceYieldsIdenticalExplanations() {
         String guidance = resource("/replay/vidar-guidance.json");
         String stale = resource("/replay/vidar-stale.json");
+        String amper = resource("/replay/amper-preempt.json");
         assertIdenticalReplays(guidance);
         assertIdenticalReplays(stale);
+        assertIdenticalReplays(amper);
     }
 
     @Test

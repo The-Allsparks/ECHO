@@ -2,6 +2,7 @@ package org.allsparks.echo.replay;
 
 import org.allsparks.echo.EchoEngine;
 import org.allsparks.echo.EchoFeatureFlags;
+import org.allsparks.echo.adapters.AmperObservation;
 import org.allsparks.echo.adapters.VidarObservation;
 import org.allsparks.echo.clock.FakeClock;
 import org.allsparks.echo.config.EchoConfig;
@@ -11,6 +12,7 @@ import org.allsparks.echo.input.TargetSource;
 import org.allsparks.echo.observe.EchoDecisionRecord;
 import org.allsparks.echo.observe.TraceExporter;
 import org.allsparks.echo.render.NoOpRenderer;
+import org.allsparks.echo.value.Flag;
 import org.allsparks.echo.value.Presence;
 import org.allsparks.echo.value.Scalar;
 
@@ -91,17 +93,20 @@ public final class ReplayRunner {
             String sourceId = stringField(step, "sourceId");
             VidarObservation obs = new VidarObservation(
                     sourceId, targetId, category, bearing, distance, confidence, observation);
-            return obs.applyTo(builder).build();
+            obs.applyTo(builder);
+        } else {
+            builder
+                    .targetSource(targetSource)
+                    .targetId(targetId)
+                    .targetCategory(category)
+                    .bearingRad(bearing)
+                    .distanceM(distance)
+                    .confidence(confidence)
+                    .observationNanos(observation);
         }
-        return builder
-                .targetSource(targetSource)
-                .targetId(targetId)
-                .targetCategory(category)
-                .bearingRad(bearing)
-                .distanceM(distance)
-                .confidence(confidence)
-                .observationNanos(observation)
-                .build();
+        Flag amperWarning = flagField(step, "amperWarning", "amperWarningPresence");
+        new AmperObservation(amperWarning, observation).applyTo(builder);
+        return builder.build();
     }
 
     private static TargetSource parseTargetSource(String raw) {
@@ -116,6 +121,22 @@ public final class ReplayRunner {
             return AudioDeviceStatus.AVAILABLE;
         }
         return AudioDeviceStatus.valueOf(raw);
+    }
+
+    private static Flag flagField(String json, String booleanKey, String presenceKey) {
+        String presenceName = stringField(json, presenceKey);
+        if (presenceName != null && !presenceName.isEmpty() && !"PRESENT".equals(presenceName)) {
+            Presence presence = Presence.valueOf(presenceName);
+            if (presence == Presence.STALE) {
+                return Flag.stale();
+            }
+            if (presence == Presence.UNAVAILABLE) {
+                return Flag.unavailable();
+            }
+            return Flag.unknown();
+        }
+        Matcher m = Pattern.compile("\"" + booleanKey + "\"\\s*:\\s*(true|false)").matcher(json);
+        return m.find() ? Flag.of(Boolean.parseBoolean(m.group(1))) : Flag.unavailable();
     }
 
     private static Scalar scalarField(String json, String numberKey, String presenceKey) {
