@@ -2,7 +2,7 @@
 
 Do not rely only on listening.
 
-## Automated (Phase 0–2)
+## Automated (Phase 0–3)
 
 See `src/test/java/org/allsparks/echo`. Coverage includes:
 
@@ -23,6 +23,8 @@ See `src/test/java/org/allsparks/echo`. Coverage includes:
 - File replay: `echo-replay.v0` fixtures under `src/test/resources/replay/` via `ReplayRunner`
 - Golden replay run twice → identical `EchoDecisionRecord.toExplanation()` per step
 - `TraceExporter` no-op unless `traceExport=true`
+- AMPER DTO (`amper-echo.v0`): `Flag.of(true)` + `amperAdapter` → `WARN_AMPER` preempts valid guidance; `Flag.unavailable()` does not invent a warning; `amperAdapter=false` + warning true → `FLAG_DISABLED`, not `WARN_AMPER`
+- File replay: `amper-preempt.json` (`amperWarning: true`) → `WARN_AMPER`; optional step keys `amperWarning` / `amperWarningPresence` parsed like scalar presence keys
 
 Property-style: bearing normalization is tested across a grid of offsets (not a full PBT library, to keep JDK-only).
 

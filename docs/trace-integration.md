@@ -23,9 +23,9 @@ Top-level fields:
 | `helmTargetSource`, `amperAdapter`, `mimicAdapter`, `beaconAdapter` | matching flag builders (default false) |
 | `steps` | array of snapshot objects |
 
-Each step uses the same names as `EchoSnapshot` / `VidarObservation`: `receiptNanos`, `observationNanos`, `driverEnabled`, `audioDeviceStatus`, `targetSource`, `sourceId`, `targetId`, `category`, `bearingRad`, `distanceM`, `confidence`. Optional `bearingPresence` / `distancePresence` / `confidencePresence` (`UNKNOWN`, `STALE`, `UNAVAILABLE`) override a numeric scalar.
+Each step uses the same names as `EchoSnapshot` / `VidarObservation`: `receiptNanos`, `observationNanos`, `driverEnabled`, `audioDeviceStatus`, `targetSource`, `sourceId`, `targetId`, `category`, `bearingRad`, `distanceM`, `confidence`. Optional `bearingPresence` / `distancePresence` / `confidencePresence` (`UNKNOWN`, `STALE`, `UNAVAILABLE`) override a numeric scalar. Optional `amperWarning` (JSON boolean) / `amperWarningPresence` feed `AmperObservation` (`amper-echo.v0`); missing keys leave the Flag unavailable.
 
-When `targetSource` is `BOUNDED_ADAPTER` (the default if omitted), `ReplayRunner` builds the snapshot through `VidarObservation.applyTo`.
+When `targetSource` is `BOUNDED_ADAPTER` (the default if omitted), `ReplayRunner` builds the snapshot through `VidarObservation.applyTo`, then applies `AmperObservation`.
 
 Run with `ReplayRunner.run(String)` or `ReplayRunner.run(Path)`.
 
