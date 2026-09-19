@@ -6,6 +6,7 @@ import org.allsparks.echo.cue.CueFamily;
 import org.allsparks.echo.cue.SilenceReason;
 import org.allsparks.echo.input.EchoSnapshot;
 import org.allsparks.echo.observe.EchoDecisionRecord;
+import org.allsparks.echo.observe.EchoDecisionSink;
 import org.allsparks.echo.observe.RejectedCue;
 import org.allsparks.echo.observe.TraceExporter;
 import org.allsparks.echo.render.CueRenderer;
@@ -24,19 +25,26 @@ public final class EchoEngine {
     private final EchoFeatureFlags flags;
     private final CueRenderer renderer;
     private final TraceExporter traceExporter;
+    private final EchoDecisionSink decisionSink;
     private final CueSelector selector = new CueSelector();
 
     public EchoEngine(EchoClock clock, EchoConfig config, EchoFeatureFlags flags, CueRenderer renderer) {
-        this(clock, config, flags, renderer, TraceExporter.noop());
+        this(clock, config, flags, renderer, TraceExporter.noop(), EchoDecisionSink.NOOP);
     }
 
     public EchoEngine(EchoClock clock, EchoConfig config, EchoFeatureFlags flags, CueRenderer renderer,
                       TraceExporter traceExporter) {
+        this(clock, config, flags, renderer, traceExporter, EchoDecisionSink.NOOP);
+    }
+
+    public EchoEngine(EchoClock clock, EchoConfig config, EchoFeatureFlags flags, CueRenderer renderer,
+                      TraceExporter traceExporter, EchoDecisionSink decisionSink) {
         this.clock = clock;
         this.config = config;
         this.flags = flags;
         this.renderer = renderer == null ? new NoOpRenderer() : renderer;
         this.traceExporter = traceExporter == null ? TraceExporter.noop() : traceExporter;
+        this.decisionSink = decisionSink == null ? EchoDecisionSink.NOOP : decisionSink;
     }
 
     public static EchoEngine phase0(EchoClock clock) {
@@ -93,6 +101,9 @@ public final class EchoEngine {
                 silence,
                 renderFail ? SonifiedCue.silence(SilenceReason.RENDERER_FAILURE) : cue,
                 selected.explanation());
+        if (decisionSink != EchoDecisionSink.NOOP) {
+            decisionSink.onDecision(record);
+        }
         if (flags.traceExport()) {
             try {
                 traceExporter.write(record);

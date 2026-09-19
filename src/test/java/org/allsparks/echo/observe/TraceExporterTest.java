@@ -48,4 +48,35 @@ class TraceExporterTest {
         String line = TraceExporter.toJsonLine(record);
         assertTrue(jsonl.startsWith(line));
     }
+
+    @Test
+    void decisionSinkReceivesRecordWhenJsonlOff() {
+        FakeClock clock = new FakeClock();
+        java.util.concurrent.atomic.AtomicReference<EchoDecisionRecord> seen =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        EchoEngine engine = new EchoEngine(
+                clock,
+                EchoConfig.defaults(),
+                EchoFeatureFlags.disabled(),
+                new FakeRenderer(),
+                TraceExporter.noop(),
+                seen::set);
+        engine.step(Snapshots.guidance(clock, 0, 1.0, 0.9));
+        assertTrue(seen.get() != null);
+        java.util.ArrayList<String> events = new java.util.ArrayList<>();
+        EchoToTraceAdapter adapter = new EchoToTraceAdapter(new EchoToTraceAdapter.Emitter() {
+            @Override
+            public void event(String name, String message) {
+                events.add(name);
+            }
+
+            @Override
+            public void record(String name, double value) {
+                events.add(name);
+            }
+        });
+        adapter.onDecision(seen.get());
+        assertTrue(events.get(0).startsWith("ECHO/Decision/"));
+        assertTrue(events.contains("ECHO/Select/LatencyNs"));
+    }
 }
